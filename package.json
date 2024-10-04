@@ -1,0 +1,19 @@
+{
+  "name": "trawell-backend",
+  "version": "1.0.0",
+  "description": "complete backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev" : "nodemon src/app.js"
+  },
+  "keywords": [
+    "backend",
+    "trawell"
+  ],
+  "author": "IshpreetSingh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
