@@ -2,19 +2,36 @@ const express = require("express");
 
 const app = express();
 
-
-
-
-app.use("/hello",(req,res)=>{
-    res.send("heeloo  heeloejsja");
+app.get("/user",(req, res)=> {
+    res.send("Hello User");
 })
 
-app.use("/hello/bitch",(req,res)=>{
-    res.send("Hello bitch");
+app.post("/user",(req, res)=> {
+    res.send({
+        name: "John",
+        age: 30,
+        status: "single"
+    });
 })
-app.use("/bitch",(req,res)=>{
-    res.send("STFU and leave");
+
+app.delete("/user",(req, res)=> {
+    res.send("Deleted sucessfully");
 })
+
+app.put("/user",(req, res)=> {
+    res.send({
+        name: "John",
+        age: 30,
+        status: "married"
+    });
+})
+
+app.patch("/user",(req, res)=> {
+    res.send({
+        status: "single"
+    });
+})
+
 app.use("/",(req,res)=>{
     res.send("Hello World");
 })
@@ -23,3 +40,16 @@ app.use("/",(req,res)=>{
 app.listen(7777,()=>{
     console.log("server is running on port 7777");
 })
+
+
+
+// app.use("/hello",(req,res)=>{
+//     res.send("heeloo  heeloejsja");
+// })
+
+// app.use("/hello/bitch",(req,res)=>{
+//     res.send("Hello bitch");
+// })
+// app.use("/bitch",(req,res)=>{
+//     res.send("STFU and leave");
+// })
