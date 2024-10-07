@@ -1,25 +1,19 @@
 const express = require("express");
-
 const app = express();
+const {isAdminAuth,isUserAuth} = require("../middlewares/auth");
 //So to handle the auth middlewares are used such that the repettion of code is not done again and again...
-app.use("/admin" ,(req,res,next)=>{
-    const token = "xyz";
-    const isAuthorized = token == "xyz";
-    if(!isAuthorized){
-        res.status(401).send("Not authorized token")
-    }
-    else next();
-})
+app.use("/admin", isAdminAuth);
 
+app.get("/user/getdata",isUserAuth, (req, res) => {
+    res.send("user data found");
+  });
 
-app.get("/admin/getdata" , (req,res)=>{
-    res.send("admin data found");
-    
-})
-app.get("/admin/deletedata" , (req,res)=>{
-    res.send("admin data deleted");
-})
-
+app.get("/admin/getdata", (req, res) => {
+  res.send("admin data found");
+});
+app.get("/admin/deletedata", (req, res) => {
+  res.send("admin data deleted");
+});
 
 app.listen(7777, () => {
   console.log("server is running on port 7777");
@@ -71,9 +65,6 @@ app.listen(7777, () => {
 //   console.log("handling the route 2nd");
 //  // res.send({ firstName: "Karan", lastName: "Singh", dept_name: "CSE" });
 // }
-
-
-
 
 ///HOW ROUTE HANDLERS ARE WORKING AND MIDDLEWARES ARE GENERATED WITH THIS FLOW
 // app.get(
