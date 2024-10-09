@@ -1,32 +1,15 @@
 const express = require("express");
+const connectDB = require("../config/database")
 const app = express();
-const {isAdminAuth,isUserAuth} = require("../middlewares/auth");
-app.use("/admin", isAdminAuth);
-//So to handle the auth middlewares are used such that the repettion of code is not done again and again...
-app.get("/user/getdata",isUserAuth, (req, res) => {
-    throw new Error("dfdsad");
-    res.send("user data found");
-
-  });
-
-app.get("/admin/getdata", (req, res) => {
-    res.send("admin data found");
-});
-app.get("/admin/deletedata", (req, res) => {
-  res.send("admin data deleted");
-});
-
-app.use("/",(err,req,res,next)=>{
-    if(err){
-        res.status(500).send("Something went wrong")
-    }
-    
-})
-
-
-app.listen(7777, () => {
+connectDB().then(()=>{
+    console.log("Connected to MongoDB database")
+    app.listen(7777, () => {
   console.log("server is running on port 7777");
 });
+}).catch((err)=>{
+    console.log("Database can't connected")
+})
+
 
 // app.post("/user", (req, res) => {
 //   res.send({
@@ -96,3 +79,26 @@ app.listen(7777, () => {
 //     next();
 //     }
 //   );
+
+    // const {isAdminAuth,isUserAuth} = require("../middlewares/auth");
+    // app.use("/admin", isAdminAuth);
+    // //So to handle the auth middlewares are used such that the repettion of code is not done again and again...
+    // app.get("/user/getdata",isUserAuth, (req, res) => {
+    //     throw new Error("dfdsad");
+    //     res.send("user data found");
+    
+    //   });
+    
+    // app.get("/admin/getdata", (req, res) => {
+    //     res.send("admin data found");
+    // });
+    // app.get("/admin/deletedata", (req, res) => {
+    //   res.send("admin data deleted");
+    // });
+    
+    // app.use("/",(err,req,res,next)=>{
+    //     if(err){
+    //         res.status(500).send("Something went wrong")
+    //     }
+        
+    // })
