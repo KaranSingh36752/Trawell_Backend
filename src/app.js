@@ -1,19 +1,28 @@
 const express = require("express");
 const app = express();
 const {isAdminAuth,isUserAuth} = require("../middlewares/auth");
-//So to handle the auth middlewares are used such that the repettion of code is not done again and again...
 app.use("/admin", isAdminAuth);
-
+//So to handle the auth middlewares are used such that the repettion of code is not done again and again...
 app.get("/user/getdata",isUserAuth, (req, res) => {
+    throw new Error("dfdsad");
     res.send("user data found");
+
   });
 
 app.get("/admin/getdata", (req, res) => {
-  res.send("admin data found");
+    res.send("admin data found");
 });
 app.get("/admin/deletedata", (req, res) => {
   res.send("admin data deleted");
 });
+
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("Something went wrong")
+    }
+    
+})
+
 
 app.listen(7777, () => {
   console.log("server is running on port 7777");
