@@ -1,6 +1,23 @@
 const express = require("express");
-const connectDB = require("../config/database")
+const connectDB = require("../config/database");
+const User = require("./models/user");
 const app = express();
+
+app.post("/signup" , async (req,res) => {
+  const newUser = new User({
+    firstName : "Karan",
+    lastName : "Singh",
+    emailId : "karan@gmail.com",
+    password : "karan123",
+    age: 20,
+    gender: "Male",
+  });
+  await newUser.save();
+  res.send("Data added successfully.")
+})
+
+
+
 connectDB().then(()=>{
     console.log("Connected to MongoDB database")
     app.listen(7777, () => {
