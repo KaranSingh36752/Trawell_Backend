@@ -2,10 +2,9 @@ const express = require("express");
 const connectDB = require("../config/database");
 const User = require("./models/user");
 
-
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
 app.post("/signup", async (req, res) => {
   const newUser = new User(req.body);
@@ -18,6 +17,51 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.get("/user", async (req, res) => {
+  const userEmail = req.body.emailId;
+
+  try {
+    const users = await User.find({ emailId: userEmail });
+    if (users.length === 0) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(users);
+    }
+  } catch (err) {
+    res.status(400).send("something went wrong.");
+  }
+});
+
+app.get("/feed", async (req, res) => {
+  try {
+    const user = await User.find({});//empty filter is passed 
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("something went wrong.");
+  }
+});
+
+app.get("/user/id" , async(req,res)=>{
+  const userId = req.body._id;
+  console.log(userId);
+  try {
+    const user = await User.findById({_id : userId});
+    res.send(user);
+  }catch(err){
+    res.status(400).send("something went wrong");
+  }
+})
+
+app.get("/one" , async (req,res)=>{
+  const userPassword = req.body.password;
+  try{
+    const user = await User.findOne({password: userPassword});
+    res.send(user);
+  }catch(err){
+    res.status(400).send("something went wrong");
+  }
+})
+
 connectDB()
   .then(() => {
     console.log("Connected to MongoDB database");
@@ -28,10 +72,6 @@ connectDB()
   .catch((err) => {
     console.log("Database can't connected");
   });
-
-
-
-
 
 // app.post("/user", (req, res) => {
 //   res.send({
