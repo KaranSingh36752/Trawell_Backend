@@ -66,7 +66,15 @@ app.get("/one", async (req, res) => {
 app.patch("/user", async (req, res) => {
   const userId = req.body._id;
   const data = req.body;
+
   try {
+    const ALLOWED_UPDATES = ["firstName", "lastName", "age", "gender"];
+
+    const isUpdateAllowed = Object.keys(data).every((k)=>ALLOWED_UPDATES.includes(k));
+
+    if(!isUpdateAllowed){
+      throw new Error("Update not allowed");
+    }
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
       returnDocument: "before",
       runValidators: true,
@@ -74,20 +82,20 @@ app.patch("/user", async (req, res) => {
     // console.log(user);
     res.send("data updated successfully");
   } catch (err) {
-    res.status(400).send("something went wrong. ErrorMessage : "+ err.message);
+    res.status(400).send("something went wrong. ErrorMessage : " + err.message);
   }
 });
 //Delete api
-app.delete("/user",async(req,res)=>{
+app.delete("/user", async (req, res) => {
   const userId = req.body._id;
   try {
-   const user =  await User.findByIdAndDelete({_id : userId});
-   console.log(user);
-    res.send("deleted successfully")
-  }catch(err){
+    const user = await User.findByIdAndDelete({ _id: userId });
+    console.log(user);
+    res.send("deleted successfully");
+  } catch (err) {
     res.status(400).send("something went wrong");
   }
-})
+});
 
 connectDB()
   .then(() => {
