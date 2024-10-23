@@ -1,21 +1,64 @@
 const express = require("express");
 const connectDB = require("../config/database");
 const User = require("./models/user");
+const { validSignUpData } = require("./utilis/validation");
+const bcrypt = require("bcrypt");
 
 const app = express();
 
 app.use(express.json());
 //Post the data with dynamic nature
 app.post("/signup", async (req, res) => {
-  const newUser = new User(req.body);
-
+  // VAlidation of signup user at api level validation
   try {
+    validSignUpData(req);
+    const { firstName, lastName, age, emailId, gender, image, password } =
+      req.body;                                // Only 
+    //Encryption of the password
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    // console.log(passwordHash);
+
+    //i=new instance is created to  post the user
+    const newUser = new User({
+      firstName,
+      lastName,
+      age,
+      emailId,
+      gender,
+      image,
+      password: passwordHash,
+    });
+
     await newUser.save();
     res.send("Data added successfully.");
   } catch (err) {
-    res.status(400).send("Error saving the user:" + err.message);
+    res.status(400).send("ERROR :" + err.message);
   }
 });
+
+app.post("/login" , async (req,res)=>{
+  try {
+    const {emailId , password} = req.body;
+    if(!emailId){
+      throw new Error("Email not present!!");
+    }
+
+    const user = await User.findOne({emailId});
+    if(!user){
+      throw new Error("Invalid credentials!!");
+    }
+    const isValidPassword = await bcrypt.compare(password,user.password);
+    if(isValidPassword){
+      res.send("Login Successfull.");
+    }else{
+      throw new Error("Invalid credentials!!")
+    }
+  }catch(err){
+    res.status(400).send("ERROR :" + err.message);
+  }
+})
+
 //get api of user by find MOndel
 app.get("/user", async (req, res) => {
   const userEmail = req.body.emailId;
@@ -63,16 +106,18 @@ app.get("/one", async (req, res) => {
   }
 });
 //Patch api
-app.patch("/user", async (req, res) => {
-  const userId = req.body._id;
+app.patch("/user/:userId", async (req, res) => {
+  const userId = req.params?._id;
   const data = req.body;
 
   try {
     const ALLOWED_UPDATES = ["firstName", "lastName", "age", "gender"];
 
-    const isUpdateAllowed = Object.keys(data).every((k)=>ALLOWED_UPDATES.includes(k));
+    const isUpdateAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
 
-    if(!isUpdateAllowed){
+    if (!isUpdateAllowed) {
       throw new Error("Update not allowed");
     }
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
@@ -199,3 +244,4 @@ connectDB()
 //     }
 
 // })
+fuck you bitch
