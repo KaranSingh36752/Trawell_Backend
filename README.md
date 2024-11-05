@@ -1,8 +1,5 @@
 back
- - install jsonwebtoken 
- - e cookies inside your profile API and find the logged in user
- - userAuth Middleware
- - Add the userAuth middle ware in profile API and a new sendConnectionRequest API
+ - in profile API and a new sendConnectionRequest API
  - Set the expiry of JWT token and cookies to 7 days
  - Create userSchema method to getJWT() 
  - Create UserSchema method to comparepassword(passwordInputByUser)
