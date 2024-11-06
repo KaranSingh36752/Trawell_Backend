@@ -1,7 +1,4 @@
- for express.Router
- - Create routes folder for managing auth,profile, request routers
- - create authRouter, profileRouter, requestRouter
- - Import these routers in app.js
+ uters in app.js
  - Create POST 
 
 
