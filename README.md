@@ -1,5 +1,4 @@
-ers
- - Read documentation for express.Router
+ for express.Router
  - Create routes folder for managing auth,profile, request routers
  - create authRouter, profileRouter, requestRouter
  - Import these routers in app.js
