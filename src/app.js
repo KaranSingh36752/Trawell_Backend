@@ -74,11 +74,15 @@ app.get("/profile", async (req, res) => {
     // validate my token
 
     const { token } = cookies;
+    if(!token){
+      throw new Error("Token not found.");
+    }
     const decodeData = await jwt.verify(token, "Trawell@123$");
 
     const { _id } = decodeData;
+    const user = await User.findById(_id);
     console.log("Logged in user is :" + _id);
-    res.send("Loading cookies!!!!!!");
+    res.send(user);
   } catch (err) {
     res.status(400).send("ERROR :" + err.message);
   }
