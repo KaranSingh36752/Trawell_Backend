@@ -1,4 +1,6 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 const connectDB = require("../config/database");
 const User = require("./models/user");
 const { validSignUpData } = require("./utilis/validation");
@@ -7,13 +9,15 @@ const bcrypt = require("bcrypt");
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
+
 //Post the data with dynamic nature
 app.post("/signup", async (req, res) => {
   // VAlidation of signup user at api level validation
   try {
     validSignUpData(req);
     const { firstName, lastName, age, emailId, gender, image, password } =
-      req.body;                                // Only 
+      req.body; // Only
     //Encryption of the password
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -37,27 +41,48 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/login" , async (req,res)=>{
+app.post("/login", async (req, res) => {
   try {
-    const {emailId , password} = req.body;
-    if(!emailId){
+    const { emailId, password } = req.body;
+    if (!emailId) {
       throw new Error("Email not present!!");
     }
 
-    const user = await User.findOne({emailId});
-    if(!user){
+    const user = await User.findOne({ emailId });
+    if (!user) {
       throw new Error("Invalid credentials!!");
     }
-    const isValidPassword = await bcrypt.compare(password,user.password);
-    if(isValidPassword){
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (isValidPassword) {
+      //token jwt
+      const token = await jwt.sign({ _id: user._id }, "Trawell@123$");
+      console.log(token);
+      res.cookie("token", token);
       res.send("Login Successfull.");
-    }else{
-      throw new Error("Invalid credentials!!")
+    } else {
+      throw new Error("Invalid credentials!!");
     }
-  }catch(err){
+  } catch (err) {
     res.status(400).send("ERROR :" + err.message);
   }
-})
+});
+
+//profile
+app.get("/profile", async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    // validate my token
+
+    const { token } = cookies;
+    const decodeData = await jwt.verify(token, "Trawell@123$");
+
+    const { _id } = decodeData;
+    console.log("Logged in user is :" + _id);
+    res.send("Loading cookies!!!!!!");
+  } catch (err) {
+    res.status(400).send("ERROR :" + err.message);
+  }
+});
 
 //get api of user by find MOndel
 app.get("/user", async (req, res) => {
