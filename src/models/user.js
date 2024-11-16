@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator"); // Ensure validator is imported
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
@@ -31,7 +33,8 @@ const userSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator: (value) => validator.isStrongPassword(value),
-        message: "Password should be strong (min 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 symbol)",
+        message:
+          "Password should be strong (min 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 symbol)",
       },
     },
     age: {
@@ -43,13 +46,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       validate: {
-        validator: (value) => ["male", "female", "others"].includes(value.toLowerCase()),
+        validator: (value) =>
+          ["male", "female", "others"].includes(value.toLowerCase()),
         message: "Gender is not valid.",
       },
     },
     image: {
       type: String,
-      default: "https://www.iibsonline.com/public/testimonial/testimonial_image_full/183.png",
+      default:
+        "https://www.iibsonline.com/public/testimonial/testimonial_image_full/183.png",
       validate: {
         validator: (value) => validator.isURL(value),
         message: "Invalid image URL",
@@ -60,5 +65,23 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.methods.getJWT = async function () {
+  const user = this;
+
+  const token = await jwt.sign({ _id: user._id }, "Trawell@123$", {
+    expiresIn: "7d",
+  });
+
+  return token;
+};
+
+userSchema.methods.validatePassword = async function (passwordByUser){
+  const user = this;
+  const passwordHash = user.password;
+
+  const isValid = await bcrypt.compare(passwordByUser, passwordHash);
+  return isValid;
+}
 
 module.exports = mongoose.model("User", userSchema);
