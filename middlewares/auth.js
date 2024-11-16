@@ -1,21 +1,18 @@
-const isAdminAuth = (req,res,next)=>{
-    const token = "xhgnjfhcgyz";
-    const isAuthorized = token == "xyz";
-    if(!isAuthorized){
-        res.status(401).send("Not authorized token")
+const jwt = require("jsonwebtoken");
+const User = require("../src/models/user");
+const userAuth = async (req, res, next) => {
+  try {
+    const { token } = req.cookies;
+    if (!token) {
+      throw new Error("You are not logged in");
     }
-    else next();
-}
-
-const isUserAuth = (req,res,next)=>{
-    const token = "xyz";
-    const isAuthorized = token == "xyz";
-    if(!isAuthorized){
-        res.status(401).send("Not authorized token")
-    }
-    else next();
-}
-module.exports = {
-    isAdminAuth,
-    isUserAuth
-}
+    const decodeData = await jwt.verify(token, "Trawell@123$");//it will be in .process.env file
+    const {_id} = decodeData;
+    const user = await User.findById(_id);
+    req.user = user;
+    next();
+  } catch (err) {
+    res.status(400).send("ERROR : " + err.message);
+  }
+};
+module.exports = userAuth;
