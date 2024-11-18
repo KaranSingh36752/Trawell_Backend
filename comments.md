@@ -13,7 +13,7 @@
   //     res.status(400).send("something went wrong.");
   //   }
   // });
-  // //all database feed api
+  ## all database feed api
   // app.get("/feed", async (req, res) => {
   //   try {
   //     const user = await User.find({}); //empty filter is passed
@@ -22,7 +22,7 @@
   //     res.status(400).send("something went wrong.");
   //   }
   // });
-  // //FindbyID api
+  # FindbyID api
   // app.get("/user/id", async (req, res) => {
   //   const userId = req.body._id;
   //   console.log(userId);
@@ -34,7 +34,7 @@
   //     res.status(400).send("something went wrong");
   //   }
   // });
-  // //findOne api
+  ## findOne api
   // app.get("/one", async (req, res) => {
   //   const userPassword = req.body.password;
   //   try {
@@ -44,7 +44,7 @@
   //     res.status(400).send("something went wrong");
   //   }
   // });
-  // //Patch api
+  # Patch api
   // app.patch("/user/:userId", async (req, res) => {
   //   const userId = req.params?._id;
   //   const data = req.body;
@@ -69,7 +69,7 @@
   //     res.status(400).send("something went wrong. ErrorMessage : " + err.message);
   //   }
   // });
-  // //Delete api
+ # Delete api
   // app.delete("/user", async (req, res) => {
   //   const userId = req.body._id;
   //   try {
