@@ -50,7 +50,7 @@ authRouter.post("/login", async (req, res) => {
       if (isValidPassword) {
         //token jwt
         const token = await user.getJWT();
-        console.log(token);
+        //console.log(token);
         //Add THE token to the response BACK TO USER
         res.cookie("token", token);
         res.send("Login Successfull.");
