@@ -1,6 +1,8 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/auth.js");
+const { validUpdateData } = require("../utilis/validation.js");
 const userRouter = express.Router();
+
 userRouter.get("/user/:id", userAuth, async (req, res) => {
   try {
     // validate my token
@@ -13,7 +15,20 @@ userRouter.get("/user/:id", userAuth, async (req, res) => {
 
 userRouter.patch("/user/:id", userAuth, async (req, res) => {
   try {
-    const ALLOWED_UPDATES = [""]
+    if (!validUpdateData(req)) {
+      throw new Error("Invalid Update Data..");
+    }
+    const loggedUser = req.user;
+    const updateUser = req.body;
+    // console.log(loggedUser);
+    Object.keys(updateUser).forEach((keys) => {
+      loggedUser[keys] = updateUser[keys];
+    });
+    // console.log(loggedUser);
+    await loggedUser.save();
+    res.json({
+      message: `${loggedUser.firstName} , your profile updated Sucessfully`,
+    user: loggedUser});
   } catch (err) {
     res.status(400).send("ERROR :" + err.message);
   }

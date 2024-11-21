@@ -16,6 +16,24 @@ const validSignUpData = (req) => {
     }
 }
 
+const validUpdateData = (req) => {
+    const {firstName,lastName , gender , image } = req.body;
+    const user = req.body;
+    const ALLOWED_UPDATES = ["firstName", "lastName","gender", "image"]
+    const isEditAllowed = Object.keys(user).every((keys) => ALLOWED_UPDATES.includes(keys));
+    
+    if(!firstName || !lastName){
+        throw new Error("Name is required!!");
+    }else if(!gender){
+        throw new Error("Gender is required!!");
+    }else if(!["male" , "female" , "others"].includes(gender.toLowerCase())){
+        throw new Error("Invalid Gender");
+    }
+    
+    return isEditAllowed;
+}
+
 module.exports = {
-    validSignUpData
+    validSignUpData , 
+    validUpdateData
 }
