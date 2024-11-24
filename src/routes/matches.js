@@ -68,4 +68,41 @@ matchesRouter.post(
   }
 );
 
+matchesRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedUser = req.user;
+      const { status, requestId } = req.params;
+      //validate the status
+      const isAllowedStatus = ["accept", "reject"];
+      if (!isAllowedStatus.includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId, //this is the _id of user that send the request(like) to user that will accept/reject the request
+        toUserId: loggedUser._id, // this is the user that will accept/reject the request
+        status: "like", // this is the status of the request that will be accepted/rejected as it is required to be like firstly.
+      });
+      if (!connectionRequest) {
+        return res
+          .status(400)
+          .json({ message: "Connection Request not found." });
+      }
+
+      connectionRequest.status = status; // update the status of the request
+
+      const data = await connectionRequest.save();
+      res.json({
+        message: `Connection Request ${status} by ${loggedUser.firstName} `,
+        data: data,
+      });
+    } catch (err) {
+      res.status(400).send("ERROR : " + err.message);
+    }
+  }
+);
+
 module.exports = matchesRouter;
