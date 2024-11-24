@@ -13,7 +13,7 @@ matchesRouter.post(
       const toUserId = req.params.toUserId;
       const status = req.params.status;
 
-      const allowedStatus = ["interested", "rejected"];
+      const allowedStatus = ["like", "pass"];
       if (!allowedStatus.includes(status)) {
         throw new Error("Invalid status");
       }
