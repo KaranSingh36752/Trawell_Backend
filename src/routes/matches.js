@@ -3,7 +3,7 @@ const { userAuth } = require("../middlewares/auth.js");
 const User = require("../models/user.js");
 const ConnectionRequest = require("../models/connectionRequest.js");
 const matchesRouter = express.Router();
-
+//api to send a connection request
 matchesRouter.post(
   "/request/send/:status/:toUserId",
   userAuth,
@@ -67,7 +67,7 @@ matchesRouter.post(
     }
   }
 );
-
+//api TO ACCEPT/ REJECT CONNECTION REQUEST
 matchesRouter.post(
   "/request/review/:status/:requestId",
   userAuth,

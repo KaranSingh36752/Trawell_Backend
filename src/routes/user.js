@@ -4,12 +4,51 @@ const { validUpdateData } = require("../utilis/validation.js");
 const userRouter = express.Router();
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const ConnectionRequest = require("../models/connectionRequest.js");
 
-userRouter.get("/user/:id", userAuth, async (req, res) => {
+userRouter.get("/user/connections/pending", userAuth, async (req, res) => {
   try {
-    // validate my token
-    const user = req.user;
-    res.send(user);
+    const loggedUser = req.user;
+
+    const connectionRequest = await ConnectionRequest.find({
+      toUserId: loggedUser,
+      status: "like",
+    }).populate("fromUserId", ["firstName", "lastName"]);
+
+    res.json({
+      message: "All pending connections",
+      data: connectionRequest,
+    });
+  } catch (err) {
+    res.status(400).send("ERROR :" + err.message);
+  }
+});
+
+userRouter.get("/user/connections", userAuth, async (req, res) => {
+  try {
+    const loggedUser = req.user;
+
+    const connectionRequests = await ConnectionRequest.find({
+      $or: [
+        { fromUserId: loggedUser, status: "accept" },
+        {toUserId: loggedUser,status: "accept"},
+      ],
+    })
+      .populate("fromUserId", ["firstName", "lastName"])
+      .populate("toUserId", ["firstName", "lastName"]);
+
+    //idr hain ik confusion that connection request of loggedin user is also getting displayed
+
+    const data = connectionRequests.map((row) => {
+      if (row.fromUserId._id.toString() == loggedUser._id.toString()) {
+        return row.toUserId;
+      }
+      return row.fromUserId;
+    });
+
+    res.json({
+      data,
+    });
   } catch (err) {
     res.status(400).send("ERROR :" + err.message);
   }
@@ -47,6 +86,15 @@ userRouter.patch("/user/password", userAuth, async (req, res) => {
   }
 });
 
+userRouter.get("/user/:id", userAuth, async (req, res) => {
+  try {
+    // validate my token
+    const user = req.user;
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("ERROR :" + err.message);
+  }
+});
 
 userRouter.patch("/user/:id", userAuth, async (req, res) => {
   try {
@@ -69,6 +117,5 @@ userRouter.patch("/user/:id", userAuth, async (req, res) => {
     res.status(400).send("ERROR :" + err.message);
   }
 });
-
 
 module.exports = userRouter;
