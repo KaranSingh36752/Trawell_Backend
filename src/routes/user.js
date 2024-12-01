@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const ConnectionRequest = require("../models/connectionRequest.js");
 const User = require("../models/user.js");
 
-const USER_SAVE_DATA = ["firstName" , "lastName" , "age" , "gender" ,"image"] 
+const USER_SAVE_DATA = ["firstName", "lastName", "age", "gender", "image"];
 
 // userRouter.get("/user/feed", userAuth, async (req, res) => {
 //   try {
@@ -57,6 +57,11 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
     const loggedUser = req.user;
 
+    const page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 10;
+    limit = limit > 50 ? 50 : limit;
+    const skip = (page - 1) * limit;
+
     const connectionRequests = await ConnectionRequest.find({
       $or: [{ fromUserId: loggedUser._id }, { toUserId: loggedUser._id }],
     }).select("fromUserId toUserId");
@@ -74,7 +79,10 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
         { _id: { $ne: loggedUser._id } },
         { _id: { $nin: Array.from(hideUserFromFeed) } },
       ],
-    }).select(USER_SAVE_DATA);
+    })
+      .select(USER_SAVE_DATA)
+      .skip(skip)
+      .limit(limit);
 
     res.send(feed);
   } catch (err) {

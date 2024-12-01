@@ -92,11 +92,15 @@ matchesRouter.post(
           .json({ message: "Connection Request not found." });
       }
 
+      const fromUser = await User.findById(connectionRequest.fromUserId).select(
+        "firstName"
+      );
+
       connectionRequest.status = status; // update the status of the request
 
       const data = await connectionRequest.save();
       res.json({
-        message: `Connection Request ${status} by ${loggedUser.firstName} `,
+        message: `${loggedUser.firstName} ${status} connection request  of ${fromUser} `,
         data: data,
       });
     } catch (err) {
