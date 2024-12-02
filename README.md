@@ -1,6 +1,3 @@
-rrors if email or password is invalid
-
-install cookie-parser
 
 just send a dummy cookie to user
 
