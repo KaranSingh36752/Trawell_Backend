@@ -1,7 +1,4 @@
-
-Create login API
-
-Compare passwords and throw errors if email or password is invalid
+rrors if email or password is invalid
 
 install cookie-parser
 
