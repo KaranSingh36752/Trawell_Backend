@@ -1,15 +1,5 @@
 
 
-
-
-Create PATCH /profile/password API => forgot password API
-
-Make you validate all data in every POST, PATCH apis
-
-Create Connnection Request Schema
-
-Send Connection Request API
-
 Proper validation of Data
 
 Think about ALL corner cases
