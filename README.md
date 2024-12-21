@@ -1,10 +1,4 @@
-
-
-Proper validation of Data
-
-Think about ALL corner cases
-
-$or query $and query in mongoose - https://www.mongodb.com/docs/manual/reference/operator/query-logical/
+.mongodb.com/docs/manual/reference/operator/query-logical/
 
 schema.pre("save") function
 
