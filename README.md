@@ -1,11 +1,5 @@
 
 
-What is the advantages and disadvantage of creating?
-
-Read this arcticle about compond indexes - https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/
-
-ALWAYS THINK ABOUT CORNER CASES
-
 Write code with proper validations for POST /request/review/:status/:requestId
 
 Thought process - POST vs GET
