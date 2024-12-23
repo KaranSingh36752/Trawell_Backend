@@ -1,12 +1,3 @@
-Create GET GET /user/connections
-
-Logic for GET /feed API
-
-Explore the $nin , $and, $ne and other query operatorators
-
-Pagination
-
-NOTES:
 
 /feed?page=1&limit=10 => 1-10 => .skip(0) & .limit(10)
 
