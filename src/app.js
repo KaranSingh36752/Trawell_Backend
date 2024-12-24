@@ -23,7 +23,7 @@ connectDB()
     });
   })
   .catch((err) => {
-    console.log("Database can't connected");
+    console.log("Database connection failed:", err.message);
   });
   
   

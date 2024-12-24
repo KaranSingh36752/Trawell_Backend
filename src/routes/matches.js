@@ -86,6 +86,8 @@ matchesRouter.post(
         toUserId: loggedUser._id, // this is the user that will accept/reject the request
         status: "like", // this is the status of the request that will be accepted/rejected as it is required to be like firstly.
       });
+
+      
       if (!connectionRequest) {
         return res
           .status(400)
