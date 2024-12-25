@@ -160,7 +160,7 @@ userRouter.patch("/user/password", userAuth, async (req, res) => {
       );
     }
     // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+      //hashing handle in pre save
     // Update user's password
     loggedUser.password = hashedPassword;
     await loggedUser.save();
