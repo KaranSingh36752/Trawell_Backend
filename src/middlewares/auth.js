@@ -4,7 +4,7 @@ const userAuth = async (req, res, next) => {
   try {
     const { token } = req.cookies;
     if (!token) {
-      throw new Error("You are not logged in");
+      return res.status(401).json({ message: "You are not authenticated. Please login first." });
     }
     const decodeData = await jwt.verify(token, "Trawell@123$");//it will be in .process.env file
     const {_id} = decodeData;
