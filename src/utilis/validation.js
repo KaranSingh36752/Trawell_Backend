@@ -17,9 +17,9 @@ const validSignUpData = (req) => {
 }
 
 const validUpdateData = (req) => {
-    const {firstName,lastName , gender , image } = req.body;
+    const {firstName,lastName , gender , image ,age } = req.body;
     const user = req.body;
-    const ALLOWED_UPDATES = ["firstName", "lastName","gender", "image"]
+    const ALLOWED_UPDATES = ["firstName", "lastName","gender", "image","age","about"]
     const isEditAllowed = Object.keys(user).every((keys) => ALLOWED_UPDATES.includes(keys));
     
     if(!firstName || !lastName){
@@ -28,6 +28,8 @@ const validUpdateData = (req) => {
         throw new Error("Gender is required!!");
     }else if(!["male" , "female" , "others"].includes(gender.toLowerCase())){
         throw new Error("Invalid Gender");
+    }else if(age < 18 && age > 80){
+        throw new Error("Age should be between 18 and 80");
     }
     
     return isEditAllowed;
