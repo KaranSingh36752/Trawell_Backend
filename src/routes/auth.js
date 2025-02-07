@@ -10,11 +10,11 @@ authRouter.post("/signup", async (req, res) => {
   // VAlidation of signup user at api level validation
   try {
     validSignUpData(req);
-    const { firstName, lastName, age, emailId, gender, image, password } =
+    const { firstName, lastName, age, emailId, gender, image, password ,about } =
       req.body; // Only
     //Encryption of the password
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    // const passwordHash = await bcrypt.hash(password, 10);
     // console.log(passwordHash);
 
     //i=new instance is created to  post the user
@@ -25,7 +25,8 @@ authRouter.post("/signup", async (req, res) => {
       emailId,
       gender,
       image,
-      password: passwordHash,
+      password,
+      about
     });
 
     await newUser.save();
@@ -42,27 +43,45 @@ authRouter.post("/login", async (req, res) => {
       throw new Error("Email not present!!");
     }
 
-    const user = await User.findOne({ emailId });
+    // Convert email to lowercase before querying (matches schema)
+    const user = await User.findOne({ emailId: emailId.toLowerCase() });
+
+    // Debugging output to check if the user is found
+    // console.log("User found:", user);
+
     if (!user) {
       throw new Error("Invalid credentials!!");
     }
+
+    // Check if password is valid
     const isValidPassword = await user.validatePassword(password);
-    if (isValidPassword) {
-      //token jwt
-      const token = await user.getJWT();
-      //console.log(token);
-      //Add THE token to the response BACK TO USER
-      res.cookie("token", token, {
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      });
-      res.send(user);
-    } else {
+
+    // Debugging output to check password validation
+    // console.log("Entered Password:", password);
+    // console.log("Hashed Password in DB:", user.password);
+    // console.log("Password Match:", isValidPassword);
+
+    if (!isValidPassword) {
       throw new Error("Invalid credentials!!");
     }
+
+    // Generate JWT token
+    const token = await user.getJWT();
+
+    // Set token in cookies
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    });
+
+    res.send(user);
   } catch (err) {
+    console.error("Login Error:", err.message); // Log errors for debugging
     res.status(400).send(err.message);
   }
 });
+
+
 
 authRouter.post("/logout", async (req, res) => {
   res

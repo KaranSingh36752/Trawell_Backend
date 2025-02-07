@@ -17,7 +17,7 @@ const validSignUpData = (req) => {
 }
 
 const validUpdateData = (req) => {
-    const {firstName,lastName , gender , image ,age } = req.body;
+    const {firstName,lastName , gender , image ,age, about } = req.body;
     const user = req.body;
     const ALLOWED_UPDATES = ["firstName", "lastName","gender", "image","age","about"]
     const isEditAllowed = Object.keys(user).every((keys) => ALLOWED_UPDATES.includes(keys));
