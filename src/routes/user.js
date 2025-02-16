@@ -118,8 +118,8 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         { toUserId: loggedUser, status: "accept" },
       ],
     })
-      .populate("fromUserId", ["firstName", "lastName"])
-      .populate("toUserId", ["firstName", "lastName"]);
+      .populate("fromUserId", ["firstName", "lastName" , "age" , "gender" , "image" , "about"])
+      .populate("toUserId", ["firstName", "lastName" , "age" , "gender" , "image" , "about"]);
 
     //idr hain ik confusion that connection request of loggedin user is also getting displayed
 
