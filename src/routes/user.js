@@ -97,7 +97,7 @@ userRouter.get("/user/connections/pending", userAuth, async (req, res) => {
     const connectionRequest = await ConnectionRequest.find({
       toUserId: loggedUser,
       status: "like",
-    }).populate("fromUserId", ["firstName", "lastName"]);
+    }).populate("fromUserId", ["firstName", "lastName" , "age" , "gender" , "image" , "about"]);
 
     res.json({
       message: "All pending connections",
