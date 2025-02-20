@@ -12,4 +12,3 @@ skip = (page-1)*limit;
 
 this is the backend of my project to build the consistent apis
 WHY THIS IS NOT WORKING TILL NOW
-erfvcadsfb fdv adf
