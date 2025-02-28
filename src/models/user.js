@@ -39,12 +39,12 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
-      required: true,
+      // required: true,
       min: 18,
     },
     gender: {
       type: String,
-      required: true,
+      // required: true,
       validate: {
         validator: (value) =>
           ["male", "female", "others"].includes(value.toLowerCase()),
