@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const ConnectionRequest = require("../models/connectionRequest.js");
 const User = require("../models/user.js");
 
-const USER_SAVE_DATA = ["firstName", "lastName", "age", "gender", "image"];
+const USER_SAVE_DATA = ["firstName", "lastName", "age", "gender", "image" , "about"];
 
 // userRouter.get("/user/feed", userAuth, async (req, res) => {
 //   try {
